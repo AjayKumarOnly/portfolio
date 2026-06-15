@@ -5,8 +5,7 @@ import {
   Upload, CheckCircle, AlertCircle, RefreshCw, GraduationCap, AlertTriangle
 } from 'lucide-react';
 import { 
-  getProfileData, saveProfileData, getProjects, saveProjects, 
-  getResume, saveResume, deleteResume, getInquiries, deleteInquiry,
+  getResume, saveResume, deleteResume, getInquiries, deleteInquiry, clearInquiries,
   getTimeline, saveTimeline
 } from '../utils/storage';
 
@@ -319,7 +318,7 @@ export default function AdminPanel({ isOpen, onClose, onDataChange, onShowToast 
   const handleClearAllInquiries = () => {
     showConfirm('Delete all messages in the inbox? This cannot be undone.', () => {
       closeConfirm();
-      localStorage.setItem('portfolio_inquiries_data', JSON.stringify([]));
+      clearInquiries();
       setInquiriesList([]);
       if (onShowToast) onShowToast('success', 'Inbox cleared.');
     });
@@ -396,9 +395,8 @@ export default function AdminPanel({ isOpen, onClose, onDataChange, onShowToast 
   };
 
   const handleResetStorage = () => {
-    showConfirm("This will clear your browser's local storage for this portfolio and reload the page with the default values. Continue?", () => {
+    showConfirm("Are you sure you want to log out and reload?", () => {
       closeConfirm();
-      localStorage.clear();
       sessionStorage.removeItem('portfolio_is_admin');
       window.location.reload();
     });
@@ -877,7 +875,7 @@ export default function AdminPanel({ isOpen, onClose, onDataChange, onShowToast 
                         <FileText size={18} style={{ color: 'var(--primary-light)' }} /> Resume PDF Upload
                       </h3>
                       <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                        Upload a PDF copy of your CV. It will be stored in browser localStorage and visitors can download it from the hero section.
+                        Upload a PDF copy of your CV. It will be stored permanently and visitors can download it from the hero section.
                       </p>
 
                       {resumeData ? (
@@ -924,50 +922,19 @@ export default function AdminPanel({ isOpen, onClose, onDataChange, onShowToast 
                       )}
                     </div>
 
-                    {/* Storage Analytics */}
+                    {/* Logout panel */}
                     <div className="glass" style={{ padding: '2rem', background: 'rgba(255,255,255,0.01)' }}>
                       <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <AlertCircle size={18} style={{ color: 'var(--secondary)' }} /> LocalStorage Analytics
-                      </h3>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>
-                        Browsers cap local storage at ~5 MB. Keep resume and image files compact to avoid quota errors.
-                      </p>
-
-                      {(() => {
-                        const totalChars = Object.keys(localStorage).reduce((sum, key) => sum + (localStorage[key]?.length || 0), 0);
-                        const approxBytes = totalChars * 2;
-                        const capBytes = 5 * 1024 * 1024;
-                        const percent = Math.min((approxBytes / capBytes) * 100, 100);
-                        return (
-                          <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                              <span>Used: {formatBytes(approxBytes)}</span>
-                              <span>Limit: 5.0 MB ({percent.toFixed(1)}%)</span>
-                            </div>
-                            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
-                              <div style={{ 
-                                width: `${percent}%`, height: '100%', borderRadius: '4px',
-                                background: percent > 80 ? 'var(--danger)' : percent > 50 ? 'hsl(45, 90%, 50%)' : 'var(--gradient-accent)'
-                              }} />
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </div>
-
-                    {/* Reset panel */}
-                    <div className="glass" style={{ padding: '2rem', background: 'rgba(255,255,255,0.01)' }}>
-                      <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <RefreshCw size={18} style={{ color: 'var(--accent)' }} /> Reset Local Cache
+                        <RefreshCw size={18} style={{ color: 'var(--accent)' }} /> Logout
                       </h3>
                       <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-                        Clear all browser localStorage for this portfolio and reload with the default values from <code>src/data/portfolio.json</code>.
+                        Log out of the admin panel.
                       </p>
                       <button 
                         type="button" className="btn btn-secondary"
                         onClick={handleResetStorage}
                       >
-                        Reset Local Storage & Reload
+                        Logout & Reload
                       </button>
                     </div>
                   </div>

@@ -221,7 +221,7 @@ export default function Contact({ profile, onShowToast }) {
                     <CheckCircle2 size={64} style={{ color: 'var(--accent)' }} />
                     <h3 style={{ fontSize: '1.5rem', color: '#fff' }}>Message Received!</h3>
                     <p style={{ color: 'var(--text-secondary)', maxWidth: '350px', fontSize: '0.95rem' }}>
-                      Thank you for your message. It has been successfully stored in our localStorage registry. The owner will review it upon logging into their dashboard.
+                      Thank you for your message. It has been successfully stored in our backend. The owner will review it upon logging into their dashboard.
                     </p>
                     <button className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }} onClick={() => setStatus('idle')}>
                       Send Another Message
